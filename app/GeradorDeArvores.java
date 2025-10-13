@@ -112,7 +112,7 @@ public class GeradorDeArvores {
             matricula++;
             nome = geraNomeCompleto();
             //Aqui crio um aluno com os dados gerados e o adiciono na árvore.
-            arv.add(new Aluno(matricula,nome));
+            arv.adicionar(new Aluno(matricula,nome));
         }
     }
 
@@ -132,7 +132,7 @@ public class GeradorDeArvores {
             int media = (min+max)/2;
             int matricula = matriculaBase+media;
             String nome = geraNomeCompleto();
-            arv.add(new Aluno(matricula,nome));
+            arv.adicionar(new Aluno(matricula,nome));
             //Chamo recursivamente para continuar inserindo os elementos com matrículas menores que a média
             geraArvorePerfeitamenteBalanceada(min,media-1,arv);
             //Chamo recursivamente para continuar inserindo os elementos com matrículas maiores que a média
