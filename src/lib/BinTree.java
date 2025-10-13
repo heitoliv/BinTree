@@ -74,23 +74,23 @@ public class BinTree<T> implements BinTreeInterface<T> {
      * @return o valor encontrado ou null se não existir
      */
     public T pesquisar(T value, Comparator<T> comp) {
-        return pesquisarComparadorExt(this.root, value, comp)
+        return pesquisarComparadorExt(this.root, value, comp);
     }
 
-    private pesquisarComparadorExt(NodeTree<T> r, T value, Comparator c){
+    private T pesquisarComparadorExt(NodeTree<T> r, T value, Comparator c){
         if (r == null)
             return null;
         else if (c.compare(value, r.getValue()) == 0)
             return r.getValue();
         else {
-        No noEsq = pesquisar(r.getChildLeft(), value, c);
-        No noDir = pesquisar(r.getChildRight(), value, c);
+            T noEsq = pesquisarComparadorExt(r.getChildLeft(), value, c);
+            T noDir = pesquisarComparadorExt(r.getChildRight(), value, c);
 
-        if (noEsq != null)
-            return noEsq;
-        else
-            return noDir;
-    }
+            if (noEsq != null)
+                return noEsq;
+            else
+                return noDir;
+        }
     }
     
 
@@ -120,7 +120,7 @@ public class BinTree<T> implements BinTreeInterface<T> {
      * @param value valor a ser removido
      * @return o valor removido ou null se não existir
      */
-    public T remove(T value) {
+    public T remover(T value) {
         ResultRemove<T> result = removerRecursivo(root, value, comparator);
         root = result.newRoot; // atualiza a raiz caso tenha sido alterada
         return result.removedValue;
