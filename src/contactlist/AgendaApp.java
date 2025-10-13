@@ -1,10 +1,12 @@
 package contactlist.app;
 import java.util.Scanner;
+import contactlist.ComparadorContatoPorNome;
 
 import lib.BinTree;
 
 
 public class AgendaApp {
+    private static ComparadorContatoPorNome = new ComparadorContatoPorNome;
     private static BinTree<Contato> arvore = new BinTree<>(null);
     public static void main(){
 
