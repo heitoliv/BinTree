@@ -25,7 +25,7 @@ public interface BinTreeInterface<T>{
      * @param novoValor - Elemento do Tipo T a ser armazenado na árvore.
      *
      */
-    public void add(T novoValor);
+    public void adicionar(T novoValor);
 
 
     /**
@@ -33,7 +33,7 @@ public interface BinTreeInterface<T>{
      * @param valor - será utilizado para passar o valor da chave a ser buscada. Por exemplo, se for um árvore de Alunos indexada por nome, deve-se passar um objeto do tipo aluno com o nome que se deseja buscar.
      * @return caso tenha sido encontrado um elemento com o valor buscado, o mesmo será retornado. Caso contrário retorna null.
      */
-    public T search(T valor);
+    public T pesquisar(T valor);
 
 
     /**
@@ -43,7 +43,7 @@ public interface BinTreeInterface<T>{
      * @param comparador - Comparator a ser utilizado na busca.
      * @return caso tenha sido encontrado um elemento com o valor buscado, o mesmo será retornado. Caso contrário retorna null.
      */
-    public T search(T valor, Comparator<T> comparador);
+    public T pesquisar(T valor, Comparator<T> comparador);
 
 
     /**
@@ -51,21 +51,21 @@ public interface BinTreeInterface<T>{
      * @param valor - será utilizado para passar o valor da chave a ser buscada. Por exemplo, se for um árvore de Alunos indexada por nome, deve-se passar um objeto do tipo aluno com o nome que se deseja buscar.
      * @return caso tenha sido encontrado um elemento com o valor buscado, o elemento será removido da árvore e seu valor (do tipo T) será retornado. Caso contrário retorna null.
      */
-    public T remove(T valor);
+    public T remover(T valor);
 
 
     /**
      * Método que retorna a altura da árvore
      * @return Retorna a altura da árvore. Árvores só com raiz tem altura zero(0). Se raiz for nula retorne -1.
      */
-    public int height();
+    public int altura();
 
 
     /**
      * Método que retorna a quantidade de nós da árvore
      * @return Retorna a quantidade de nós da árvore
      */
-    public int countNodes();
+    public int quantidadeNos();
 
 
     /**
@@ -78,5 +78,5 @@ public interface BinTreeInterface<T>{
      * Metódo que retona o resultado do caminhamento em ordem na árvore.
      * @return String contendo os toString dos valores armazenados nos nós, separados por " \n ". Os nós devem ser percorridos em ordem. A String deve iniciar com "[" e finalizar com "]"
      */
-    public String inOrderToString();
+    public String caminharEmOrdem();
 }

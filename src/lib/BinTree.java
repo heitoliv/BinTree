@@ -28,8 +28,8 @@ public class BinTree<T> implements BinTreeInterface<T> {
      *
      * @param newValue valor a ser adicionado
      */
-    public void add(T newValue) {
-        root = addRecursive(root, newValue);
+    public void adicionar(T newValue) {
+        root = adicionarRecursivo(root, newValue);
     }
 
     /**
@@ -39,7 +39,7 @@ public class BinTree<T> implements BinTreeInterface<T> {
      * @param value valor a ser inserido
      * @return o nó atualizado após a inserção
      */
-    private NodeTree<T> addRecursive(NodeTree<T> node, T value) {
+    private NodeTree<T> adicionarRecursivo(NodeTree<T> node, T value) {
         if (node == null) {
             return new NodeTree<T>(value);
         }
@@ -47,10 +47,10 @@ public class BinTree<T> implements BinTreeInterface<T> {
         int comp = comparator.compare(value, node.getValue());
         if (comp < 0) {
             // insere à esquerda se o valor for menor
-            node.setChildLeft(addRecursive(node.getChildLeft(), value));
+            node.setChildLeft(adicionarRecursivo(node.getChildLeft(), value));
         } else if (comp > 0) {
             // insere à direita se o valor for maior
-            node.setChildRight(addRecursive(node.getChildRight(), value));
+            node.setChildRight(adicionarRecursivo(node.getChildRight(), value));
         }
         // se for igual, não faz nada (evita duplicatas)
         return node;
@@ -62,8 +62,8 @@ public class BinTree<T> implements BinTreeInterface<T> {
      * @param value valor a ser pesquisado
      * @return o valor encontrado ou null se não existir
      */
-    public T search(T value) {
-        return search(value, comparator);
+    public T pesquisar(T value) {
+        return pesquisarRecursivo(root, value, comparator);
     }
 
     /**
@@ -73,9 +73,26 @@ public class BinTree<T> implements BinTreeInterface<T> {
      * @param comp  Comparator utilizado para a busca
      * @return o valor encontrado ou null se não existir
      */
-    public T search(T value, Comparator<T> comp) {
-        return searchRecursive(root, value, comp);
+    public T pesquisar(T value, Comparator<T> comp) {
+        return pesquisarComparadorExt(this.root, value, comp)
     }
+
+    private pesquisarComparadorExt(NodeTree<T> r, T value, Comparator c){
+        if (r == null)
+            return null;
+        else if (c.compare(value, r.getValue()) == 0)
+            return r.getValue();
+        else {
+        No noEsq = pesquisar(r.getChildLeft(), value, c);
+        No noDir = pesquisar(r.getChildRight(), value, c);
+
+        if (noEsq != null)
+            return noEsq;
+        else
+            return noDir;
+    }
+    }
+    
 
     /**
      * Método recursivo auxiliar para pesquisa.
@@ -85,16 +102,16 @@ public class BinTree<T> implements BinTreeInterface<T> {
      * @param cmp   comparator usado para comparar os elementos
      * @return o valor encontrado ou null
      */
-    private T searchRecursive(NodeTree<T> node, T value, Comparator<T> cmp) {
+    private T pesquisarRecursivo(NodeTree<T> node, T value, Comparator<T> cmp) {
         if (node == null) return null;
 
         int comp = cmp.compare(value, node.getValue());
         if (comp == 0) {
             return node.getValue(); // valor encontrado
         } else if (comp < 0) {
-            return searchRecursive(node.getChildLeft(), value, comparator);
+            return pesquisarRecursivo(node.getChildLeft(), value, comparator);
         }
-        return searchRecursive(node.getChildRight(), value, comparator);
+        return pesquisarRecursivo(node.getChildRight(), value, comparator);
     }
 
     /**
@@ -104,7 +121,7 @@ public class BinTree<T> implements BinTreeInterface<T> {
      * @return o valor removido ou null se não existir
      */
     public T remove(T value) {
-        ResultRemove<T> result = removeRecursive(root, value, comparator);
+        ResultRemove<T> result = removerRecursivo(root, value, comparator);
         root = result.newRoot; // atualiza a raiz caso tenha sido alterada
         return result.removedValue;
     }
@@ -117,18 +134,18 @@ public class BinTree<T> implements BinTreeInterface<T> {
      * @param cmp   comparator usado para comparar os elementos
      * @return objeto ResultRemove contendo o novo nó raiz e o valor removido
      */
-    private ResultRemove<T> removeRecursive(NodeTree<T> node, T value, Comparator<T> cmp) {
+    private ResultRemove<T> removerRecursivo(NodeTree<T> node, T value, Comparator<T> cmp) {
         if (node == null) return new ResultRemove<>(null, null);
 
         int comp = cmp.compare(value, node.getValue());
         if (comp < 0) {
             // busca na subárvore esquerda
-            ResultRemove<T> result = removeRecursive(node.getChildLeft(), value, cmp);
+            ResultRemove<T> result = removerRecursivo(node.getChildLeft(), value, cmp);
             node.setChildLeft(result.newRoot);
             return new ResultRemove<>(node, result.removedValue);
         } else if (comp > 0) {
             // busca na subárvore direita
-            ResultRemove<T> res = removeRecursive(node.getChildRight(), value, cmp);
+            ResultRemove<T> res = removerRecursivo(node.getChildRight(), value, cmp);
             node.setChildRight(res.newRoot);
             return new ResultRemove<>(node, res.removedValue);
         } else {
@@ -144,7 +161,7 @@ public class BinTree<T> implements BinTreeInterface<T> {
             // caso 3: dois filhos (substitui pelo sucessor (menor da subárvore direita))
             NodeTree<T> succ = findMin(node.getChildRight());
             node.setValue(succ.getValue()); // copia valor do sucessor
-            ResultRemove<T> result = removeRecursive(node.getChildRight(), succ.getValue(), cmp);
+            ResultRemove<T> result = removerRecursivo(node.getChildRight(), succ.getValue(), cmp);
             node.setChildRight(result.newRoot);
             return new ResultRemove<>(node, removed);
         }
@@ -184,9 +201,9 @@ public class BinTree<T> implements BinTreeInterface<T> {
      * Retorna a travessia in-order como uma string (útil para testes ou exibição).
      * @return String com os elementos em ordem
      */
-    public String inOrderToString() {
+    public String caminharEmOrdem() {
         StringBuilder sb = new StringBuilder();
-        buildInOrderString(root, sb);
+        buildEmOrdemString(root, sb);
         return sb.toString().trim();
     }
 
@@ -197,21 +214,21 @@ public class BinTree<T> implements BinTreeInterface<T> {
      * @param node nó atual em análise
      * @param sb   acumulador da string (StringBuilder)
      */
-    private void buildInOrderString(NodeTree<T> node, StringBuilder sb) {
+    private void buildEmOrdemString(NodeTree<T> node, StringBuilder sb) {
         if (node != null) {
             // Visita recursivamente a subárvore esquerda
-            buildInOrderString(node.getChildLeft(), sb);
+            buildEmOrdemString(node.getChildLeft(), sb);
 
             // Adiciona o valor do nó atual
             sb.append(node.getValue()).append(" ");
 
             // Visita recursivamente a subárvore direita
-            buildInOrderString(node.getChildRight(), sb);
+            buildEmOrdemString(node.getChildRight(), sb);
         }
     }
 
     /**
-     * Percorre a árvore em nível (Breadth-First Search) e retorna uma string
+     * Percorre a árvore em nível (Breadth-First pesquisar) e retorna uma string
      * com os valores de cada nó separados por " \n ", iniciando com "[" e terminando com "]".
      *
      * @return string formatada com os valores da árvore em ordem de nível
@@ -256,32 +273,32 @@ public class BinTree<T> implements BinTreeInterface<T> {
      * Conta o número total de nós na árvore.
      * @return número total de nós
      */
-    public int countNodes() {
-        return countNodes(root);
+    public int quantidadeNos() {
+        return quantidadeNos(root);
     }
 
-    private int countNodes(NodeTree<T> node) {
+    private int quantidadeNos(NodeTree<T> node) {
         if (node == null) return 0;
-        return 1 + countNodes(node.getChildLeft()) + countNodes(node.getChildRight());
+        return 1 + quantidadeNos(node.getChildLeft()) + quantidadeNos(node.getChildRight());
     }
 
     /**
      * Calcula a altura da árvore.
      * @return altura (nível mais profundo da árvore)
      */
-    public int height() {
+    public int altura() {
         if (root == null) {
             throw new IllegalStateException("Árvore vazia: não é possível calcular a altura.");
         }
-        return height(root);
+        return altura(root);
     }
 
-    private int height(NodeTree<T> node) {
+    private int altura(NodeTree<T> node) {
         if (node == null){
             return -1;
         }// Altura de árvore vazia é -1
-        int left = height(node.getChildLeft());
-        int right = height(node.getChildRight());
+        int left = altura(node.getChildLeft());
+        int right = altura(node.getChildRight());
         return 1 + Math.max(left, right);
     }
 }
