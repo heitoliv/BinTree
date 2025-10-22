@@ -1,53 +1,80 @@
 package app;
 
 import lib.BinTree;
-import java.util.Comparator;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        BinTree<Contact> arvore = new BinTree<>(new ContactNameComparator());
+        ContactPhoneComparator phoneComparator = new ContactPhoneComparator();
 
-        // Cria árvore binária de contatos ordenada por nome
-        BinTree<Contact> contatos = new BinTree<>(new ContactNameComparator());
+        int opcao;
 
-        // === 1️⃣ ADICIONAR CONTATOS ===
-        System.out.println("=== ADICIONANDO CONTATOS ===");
-        contatos.adicionar(new Contact("Caio Cesar", "9999-1111", "caio@email.com"));
-        contatos.adicionar(new Contact("Heitor", "9888-2222", "heitor@email.com"));
-        contatos.adicionar(new Contact("Bruno", "9777-3333", "bruno@email.com"));
-        contatos.adicionar(new Contact("Mariano", "9666-4444", "mariano@email.com"));
-        System.out.println("Contatos adicionados com sucesso!\n");
+        do {
+            System.out.println("\n=== MENU DE CONTATOS ===");
+            System.out.println("1 - Adicionar contato");
+            System.out.println("2 - Listar contatos (em ordem)");
+            System.out.println("3 - Pesquisar por nome");
+            System.out.println("4 - Pesquisar por telefone");
+            System.out.println("5 - Remover contato");
+            System.out.println("0 - Sair");
+            System.out.print("Escolha uma opção: ");
+            opcao = Integer.parseInt(sc.nextLine());
 
-        // === 2️⃣ LISTAR (em ordem) ===
-        System.out.println("=== LISTA DE CONTATOS (IN-ORDER) ===");
-        System.out.println(contatos.caminharEmOrdem());
-        System.out.println();
+            switch (opcao) {
+                case 1 -> {
+                    System.out.print("Nome: ");
+                    String nome = sc.nextLine();
+                    System.out.print("Telefone: ");
+                    String telefone = sc.nextLine();
+                    System.out.print("Email: ");
+                    String email = sc.nextLine();
 
-        // === 3️⃣ PESQUISAR POR NOME (usando o comparador padrão) ===
-        System.out.println("=== PESQUISA POR NOME ===");
-        Contact resultadoNome = contatos.pesquisar(new Contact("Bruno", "", ""));
-        System.out.println(resultadoNome != null ? "Encontrado: " + resultadoNome : "Contato não encontrado.");
-        System.out.println();
+                    arvore.adicionar(new Contact(nome, telefone, email));
+                    System.out.println("Contato adicionado com sucesso!");
+                }
 
-        // === 4️⃣ PESQUISAR POR TELEFONE (usando comparador alternativo) ===
-        System.out.println("=== PESQUISA POR TELEFONE ===");
-        Comparator<Contact> compTelefone = new ContactPhoneComparator(); // corrigido
-        Contact resultadoTelefone = contatos.pesquisar(new Contact("", "9666-4444", ""), compTelefone);
-        System.out.println(resultadoTelefone != null ? "Encontrado: " + resultadoTelefone : "Contato não encontrado.");
-        System.out.println();
+                case 2 -> {
+                    System.out.println("\n=== LISTA DE CONTATOS (IN-ORDER) ===");
+                    System.out.println(arvore.caminharEmOrdem());
+                }
 
-        // === 5️⃣ REMOVER CONTATO ===
-        System.out.println("=== REMOVENDO CONTATO 'Carlos' ===");
-        Contact removido = contatos.remover(new Contact("Carlos", "", ""));
-        System.out.println(removido != null ? "Removido: " + removido : "Contato não encontrado para remoção.");
-        System.out.println();
+                case 3 -> {
+                    System.out.print("Digite o nome do contato: ");
+                    String nomeBusca = sc.nextLine();
+                    Contact resultado = arvore.pesquisar(new Contact(nomeBusca, "", ""));
+                    if (resultado != null)
+                        System.out.println("Encontrado: " + resultado);
+                    else
+                        System.out.println("Contato não encontrado.");
+                }
 
-        // === 6️⃣ LISTAR NOVAMENTE (após remoção) ===
-        System.out.println("=== LISTA DE CONTATOS (ATUALIZADA) ===");
-        System.out.println(contatos.caminharEmOrdem());
-        System.out.println();
+                case 4 -> {
+                    System.out.print("Digite o telefone do contato: ");
+                    String telefoneBusca = sc.nextLine();
+                    Contact resultado = arvore.pesquisar(new Contact("", telefoneBusca, ""), phoneComparator);
+                    if (resultado != null)
+                        System.out.println("Encontrado: " + resultado);
+                    else
+                        System.out.println("Contato não encontrado.");
+                }
 
-        // === 7️⃣ MOSTRAR CAMINHAMENTO EM NÍVEL ===
-        System.out.println("=== CAMINHAMENTO EM NÍVEL ===");
-        System.out.println(contatos.caminharEmNivel());
+                case 5 -> {
+                    System.out.print("Digite o nome do contato a remover: ");
+                    String nomeRemover = sc.nextLine();
+                    Contact removido = arvore.remover(new Contact(nomeRemover, "", ""));
+                    if (removido != null)
+                        System.out.println("Removido: " + removido);
+                    else
+                        System.out.println("Contato não encontrado para remoção.");
+                }
+
+                case 0 -> System.out.println("Encerrando o programa...");
+                default -> System.out.println("Opção inválida!");
+            }
+        } while (opcao != 0);
+
+        sc.close();
     }
 }
