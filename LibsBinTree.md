@@ -1,4 +1,4 @@
-# Seção do Relatório: Implementações Baseadas em Árvores Binárias na Biblioteca Padrão de Java
+# Implementações Baseadas em Árvores Binárias na Biblioteca Padrão de Java (Etapa 6)
 
 ### 1. Introdução
 
