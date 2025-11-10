@@ -10,8 +10,8 @@ import java.util.Queue;
  * @param <T> tipo dos elementos armazenados na árvore
  */
 public class BinTree<T> implements BinTreeInterface<T> {
-    private NodeTree<T> root;              // nó raiz da árvore
-    private Comparator<T> comparator;      // critério de comparação para ordenar os elementos
+    protected NodeTree<T> root;              // nó raiz da árvore
+    protected Comparator<T> comparator;      // critério de comparação para ordenar os elementos
 
     /**
      * Construtor da árvore binária, recebe um Comparator para comparar os elementos.

@@ -64,7 +64,7 @@ public class AppBinTree {
         gerador.geraArvorePerfeitamenteBalanceada(1,100,arv);
         System.out.println("Árvore Perfeitamente Balanceada Criada");
         //Vou fazer uma busca pela chave de busca da árvore, ou seja, matrícula
-        Aluno busca = arv.pesquisar(new Aluno(200,""));
+        Aluno busca = arv.pesquisar(new Aluno(2000000101,""));
         if (busca == null)
             System.out.println("Aluno não encontrado");
         else
@@ -87,6 +87,6 @@ public class AppBinTree {
         gerador.geraArvoreDegenerada(50000, arv);
         System.out.println("Árvore Degenerada Criada");
         System.out.println(" Altura: " + arv.altura());
-//------Fim do trecho citado na questão 10 do relatório------------------------------- */
+//------Fim do trecho citado na questão 10 do relatório-------------------------------
     }
 }
