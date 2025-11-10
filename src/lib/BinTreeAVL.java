@@ -145,7 +145,6 @@ public class BinTreeAVL<T> extends BinTree<T> {
         }
 
         // --- 2. Obter Fator de Balanceamento ---
-        // (Após a inserção, no "caminho de volta" da recursão)
         int balance = getFatorBalanceamento(node);
 
         // --- 3. Casos de Rotação ---
@@ -177,12 +176,4 @@ public class BinTreeAVL<T> extends BinTree<T> {
         // --- 4. Retornar o nó (sem mudanças de balanceamento) ---
         return node;
     }
-    
-    /**
-     * NOTA: A implementação da remoção (remover) é opcional.
-     * Ela seguiria uma lógica similar:
-     * 1. Remover o nó (usando a lógica da BinTree).
-     * 2. Calcular o fator de balanceamento no caminho de volta.
-     * 3. Aplicar as mesmas 4 lógicas de rotação para rebalancear.
-     */
 }
