@@ -184,6 +184,7 @@ A `PriorityQueue` é uma fila que ordena os elementos com base em sua prioridade
 
 A biblioteca padrão do Java faz um uso inteligente de estruturas baseadas em árvores binárias. Para cenários que exigem uma coleção totalmente ordenada com operações rápidas sobre *qualquer* elemento, `TreeMap` e `TreeSet` (baseados em Árvores Rubro-Negras) são a escolha ideal. Por outro lado, quando o requisito é apenas obter e remover eficientemente o elemento de maior prioridade, a `PriorityQueue` (baseada em Heap Binário) é a ferramenta mais adequada e performática.
 
+---
 
 ## 5\. Compartivo entre as bibliotecas (Padrão Java vs AVL)
 
