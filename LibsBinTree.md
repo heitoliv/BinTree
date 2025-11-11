@@ -238,6 +238,7 @@ A solução correta para este problema em um sistema real seria manter múltiplo
 
 Abaixo está um pequeno programa que demonstra como usar a `TreeMap` com ordenação natural e com um `Comparator` customizado, e também ilustra a busca ineficiente por um atributo não-chave.
 
+
 #### 1. Classe `Produto`
 
 Vamos criar uma classe `Produto` que será usada como valor no nosso mapa. Ela terá uma ordem natural baseada no `id`.
@@ -352,4 +353,4 @@ Chave: Teclado Mecânico, Valor: Produto{id=35, nome='Teclado Mecânico', preco=
 Produto encontrado: Produto{id=102, nome='Mouse Gamer', preco=150.0}
 ```
 
----
+------
