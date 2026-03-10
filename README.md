@@ -1,20 +1,46 @@
-# 1. Topologia da Árvore Gerada pelo Método `geraArvoreDegenerada`
 
-* O método cria `n` objetos do tipo `Aluno`.
-* A cada iteração, a matrícula é incrementada (`matricula++`).
-* O nome é gerado de forma aleatória.
-* Cada novo aluno é adicionado à árvore **em ordem crescente de matrícula**.
+# BinTree — Relatório Completo e README
 
-Sendo a árvore uma **árvore binária de busca (BST)** que insere nós com base no valor da matrícula:
+Este documento consolida, em um único arquivo **.md**, toda a documentação técnica e o relatório de análise do projeto de árvores binárias: **árvore degenerada**, **árvore perfeitamente balanceada**, **comparação de complexidades**, **AVL vs BST**, e um panorama das **estruturas baseadas em árvores na biblioteca padrão do Java**. 
 
-* O primeiro aluno vira a **raiz**.
-* Cada novo aluno possui **matrícula maior** que o anterior.
-* Assim, todos os novos nós são inseridos **à direita** do nó anterior.
+> Repositório: https://github.com/heitoliv/BinTree
 
- Isso resulta em uma **árvore degenerada**, ou seja, uma árvore que se comporta como uma **lista encadeada**.
+---
 
+## Sumário
+1. [Topologia da Árvore Gerada pelo Método `geraArvoreDegenerada`](#1-topologia-da-árvore-gerada-pelo-método-geraarvoredegenerada)
+2. [Pior caso para 100, 200 e 1000 elementos (árvore degenerada)](#2-e-3-qual-é-o-pior-caso-para-100-200-e-1000-elementos)
+3. [Topologia da Árvore Gerada pelo Método `geraArvorePerfeitamenteBalanceada`](#4-topologia-da-árvore-gerada-pelo-método-geraarvoreperfeitamentebalanceada)
+4. [Pior caso para 100, 200 e 1000 elementos (árvore balanceada)](#5-e-6-qual-é-o-pior-caso-para-100-200-e-1000-elementos)
+5. [Ordem de complexidade da busca em árvores perfeitamente balanceadas](#qual-a-ordem-de-complexidade-de-buscas-pesquisart-valor-em-árvores-geradas-por-geraarvoreperfeitamentebalanceada)
+6. [Busca usando comparador por nome em árvore indexada por matrícula](#7-ordem-de-complexidade-da-busca-comparado-por-matricula)
+7. [Complexidade dos métodos geradores de árvore](#8-complexidade-dos-métodos-geradores-de-árvore)
+8. [Por que ocorre `StackOverflowError` em árvores degeneradas e como mitigar](#9-por-que-ocorre-o-stack-overflow)
+9. [Relatório (Etapa 5): BinTree vs. BinTreeAVL](#etapa-5-relatório-de-análise-bintree-vs-bintreeavl)
+10. [Complexidade de buscas em AVL gerada com dados degenerados](#4-análise-ordem-de-complexidade-da-busca-na-avl)
+11. [Etapa 6: Estruturas baseadas em árvores no Java (TreeMap, TreeSet, PriorityQueue)](#etapa-6-implementações-baseadas-em-árvores-binárias-na-biblioteca-padrão-de-java)
+12. [Comparativo: BinTreeAVL vs. TreeMap/TreeSet](#5-compartivo-entre-as-bibliotecas-padrão-java-vs-avl)
+13. [Exemplo prático em Java (TreeMap + Comparator + busca por atributo não-chave)](#exemplo-prático-de-utilização-treemap)
+14. [Planilha/Créditos de desenvolvimento](#planilha-de-desenvolvimento)
 
-A topologia de uma **árvore degenerada** é **linear**, semelhante a isto:
+---
+
+## 1. Topologia da Árvore Gerada pelo Método `geraArvoreDegenerada`
+
+- O método cria `n` objetos do tipo `Aluno`.
+- A cada iteração, a matrícula é incrementada (`matricula++`).
+- O nome é gerado de forma aleatória.
+- Cada novo aluno é adicionado à árvore **em ordem crescente de matrícula**.
+
+Sendo a estrutura uma **BST (Binary Search Tree)**, com inserção baseada na matrícula:
+
+- O primeiro aluno vira a **raiz**.
+- Cada novo aluno possui **matrícula maior** que o anterior.
+- Assim, todos os novos nós são inseridos **à direita** do nó anterior.
+
+**Resultado:** uma **árvore degenerada**, que se comporta como uma **lista encadeada**.
+
+Topologia (linear):
 
 ```
 Raiz
@@ -24,9 +50,9 @@ Raiz
                 └── ...
 ```
 
-Cada nó possui **apenas um filho direito** (ou esquerdo, dependendo da ordem de inserção).
+Cada nó possui **apenas um filho direito** (ou esquerdo, conforme a ordem de inserção).
 
-Se `matriculaBase = 100` e `n = 5`, o método irá gerar os seguintes alunos:
+**Exemplo** (com `matriculaBase = 100` e `n = 5`):
 
 | Ordem | Matrícula | Nome (exemplo) |
 | :---- | :-------- | :------------- |
@@ -36,7 +62,7 @@ Se `matriculaBase = 100` e `n = 5`, o método irá gerar os seguintes alunos:
 | 4     | 104       | Diego Torres   |
 | 5     | 105       | Elisa Rocha    |
 
-### Estrutura da Árvore Gerada
+Árvore resultante:
 
 ```
 (101, Ana Costa)
@@ -52,39 +78,30 @@ Se `matriculaBase = 100` e `n = 5`, o método irá gerar os seguintes alunos:
 
 ---
 
-# 2 e 3: Qual é o pior caso para 100, 200 e 1000 elementos?
+## 2 e 3: Qual é o pior caso para 100, 200 e 1000 elementos?
 
-Como visto anteriormente, a árvore aumenta o numero da matricula cada vez que é iterada uma adição de elemento. Sendo assim, o pior caso ao realizar a busca com o método pesquisar é o elemento referente ao valor estar na ultima posição da árvore (ter a maior matricula). Sendo assim, a complexidade é O(n) para essa árvore degenerada em específico.
+Como a inserção é estritamente crescente, a árvore degenere e a operação de busca `pesquisar` tem pior caso **O(n)** (alvo na última posição/maior matrícula).
 
-De certa forma, no pior caso 
-
-| Numero de Alunos | Numero de nós percorridos no pior caso |
+| Número de Alunos | Nº de nós percorridos no pior caso |
 | :---- | :-------- |
-| 100     | 100       |
-| 200     | 200       |
-| 1000    | 1000      |
+| 100   | 100       |
+| 200   | 200       |
+| 1000  | 1000      |
 
-# 4 Topologia da Árvore Gerada pelo Método `geraArvorePerfeitamenteBalanceada`
+---
 
-* O método recebe um intervalo de matrículas (`min` e `max`) e uma árvore vazia.
-* Ele calcula a **média entre `min` e `max`** e cria um aluno com a matrícula correspondente.
-* O nome é gerado de forma aleatória.
-* O aluno com a matrícula média é adicionado à árvore.
-* O método é então chamado **recursivamente** para:
+## 4. Topologia da Árvore Gerada pelo Método `geraArvorePerfeitamenteBalanceada`
 
-  * Inserir os valores **menores que a média** na **subárvore esquerda**.
-  * Inserir os valores **maiores que a média** na **subárvore direita**.
+- Recebe intervalo de matrículas (`min`, `max`) e uma árvore vazia.
+- Calcula a **média entre `min` e `max`** e cria um aluno com a matrícula correspondente.
+- Nome aleatório.
+- Insere a matrícula média como **raiz** e aplica recursão para:
+  - valores menores → **subárvore esquerda**;
+  - valores maiores → **subárvore direita**.
 
-Sendo a árvore uma **árvore binária de busca (BST)** que insere nós com base no valor da matrícula:
+**Resultado:** árvore **perfeitamente balanceada**, com preenchimento simétrico.
 
-* O nó com matrícula média torna-se a **raiz**.
-* Os valores menores ficam à **esquerda**.
-* Os valores maiores ficam à **direita**.
-* O processo recursivo garante que a árvore seja **simetricamente preenchida**.
-
-Isso resulta em uma **árvore perfeitamente balanceada**, onde as subárvores esquerda e direita de cada nó têm **aproximadamente o mesmo número de elementos**.
-
-A topologia de uma **árvore perfeitamente balanceada** é **simétrica**, semelhante a isto:
+Esquema:
 
 ```
           Raiz
@@ -94,9 +111,7 @@ A topologia de uma **árvore perfeitamente balanceada** é **simétrica**, semel
    ...  ...  ...  ...
 ```
 
-Cada nó possui **até dois filhos**, e a diferença de altura entre as subárvores é **no máximo 1**.
-
-Se `matriculaBase = 100`, `min = 1` e `max = 7`, o método irá gerar os seguintes alunos:
+Exemplo com `matriculaBase = 100`, `min = 1` e `max = 7`:
 
 | Ordem de Inserção | Intervalo (min, max) | Média | Matrícula | Nome (exemplo) |
 | :---------------- | :------------------- | :---- | :-------- | :------------- |
@@ -108,7 +123,7 @@ Se `matriculaBase = 100`, `min = 1` e `max = 7`, o método irá gerar os seguint
 | 6                 | (5, 5)               | 5     | 105       | Felipe Martins |
 | 7                 | (7, 7)               | 7     | 107       | Gabriela Nunes |
 
-### Estrutura da Árvore Gerada
+Estrutura:
 
 ```
           (104, Ana Costa)
@@ -118,195 +133,283 @@ Se `matriculaBase = 100`, `min = 1` e `max = 7`, o método irá gerar os seguint
 (101, Carla) (103, Diego) (105, Felipe) (107, Gabriela)
 ```
 
-# 5 e 6: Qual é o pior caso para 100, 200 e 1000 elementos?
+---
 
-Considere uma árvore perfeitamente balanceada com n nós. Nessa árvore a altura (número máximo de arestas da raiz até a folha mais profunda) é aproximadamente ⌊log2 n⌋. O número de nós percorridos em uma busca no pior caso corresponde ao número de níveis visitados da raiz até a folha mais profunda, ou seja, ⌊log2 n⌋ + 1 (que também pode ser escrito como ⌈log2 (n+1)⌉).
+## 5 e 6: Qual é o pior caso para 100, 200 e 1000 elementos?
 
-Aplicando aos casos pedidos:
+Para uma árvore perfeitamente balanceada com `n` nós, a altura ≈ `⌊log2 n⌋`. Assim, o número de nós visitados no pior caso de busca (da raiz até a folha mais profunda) é `⌊log2 n⌋ + 1` (ou `⌈log2 (n+1)⌉`).
 
-| Numero de Alunos | Numero de nós percorridos no pior caso |
+| Número de Alunos | Nós percorridos (pior caso) |
 | :---- | :-------- |
-| 100   | ⌊log2 100⌋ + 1 = 6 + 1 = 7      |
-| 200   | ⌊log2 200⌋ + 1 = 7 + 1 = 8      |
-| 1000  | ⌊log2 1000⌋ + 1 = 9 + 1 = 10    |
+| 100   | ⌊log₂ 100⌋ + 1 = 6 + 1 = **7** |
+| 200   | ⌊log₂ 200⌋ + 1 = 7 + 1 = **8** |
+| 1000  | ⌊log₂ 1000⌋ + 1 = 9 + 1 = **10** |
 
-**Como cheguei a essas conclusões?**  
-Porque em uma árvore binária perfeitamente balanceada os nós estão distribuídos de forma a preencher níveis de maneira uniforme. O número máximo de nós em uma árvore de altura h é 2^{h+1}-1; invertendo essa relação obtemos que a altura mínima necesaria para n nós é ≈ ⌊log2 n⌋, e o número de níveis (nós visitados numa busca da raiz até a folha) é esse valor mais 1.
-
----
-
-**Qual a ordem de complexidade de buscas (`pesquisar(T valor)`) em árvores geradas por `geraArvorePerfeitamenteBalanceada`?**
-
-A ordem de complexidade no pior caso é **O(log n)**.
-
-**Explicação:**  
-Em uma árvore perfeitamente balanceada a altura cresce proporcionalmente ao logaritmo do número de nós (h = Θ(log n)). Uma operação de busca percorre da raiz até um nó (ou folha) — em termos assintóticos, percorre no máximo um número de níveis proporcional à altura. Portanto, a busca tem complexidade de tempo O(log n), muito melhor que o pior caso da árvore degenerada (O(n)).
-
-# 7. Ordem de complexidade da busca comparado por matricula
-
-Para entender o número de nós percorridos e a ordem de complexidade da busca no pior caso nesse cenário, é importante levar em consideração o seguinte:
-
-### 1. **Árvore binária de busca indexada por matrícula:**
-
-* A árvore foi instanciada com o `ComparadorAlunoPorMatricula`, o que significa que os nós da árvore estão organizados com base na matrícula do aluno.
-* Quando realizamos a busca por nome (`busca = arv.pesquisar(new Aluno(0,"Pedro"), compPorNome)`), a árvore continua seguindo a organização por matrícula, **mas a comparação para o percurso da árvore será feita com base no nome**. Isso significa que, mesmo utilizando o `Comparator` por nome, a árvore ainda está fisicamente organizada pela matrícula.
-
-### 2. **Busca por nome utilizando o comparador de nome:**
-
-* **O pior caso para a busca por nome ocorrerá quando a árvore tiver uma estrutura completamente balanceada**. Nesse caso, a busca por nome será semelhante a uma busca em qualquer árvore binária de busca (BST) tradicional, mas com um detalhe: o valor utilizado para a comparação durante o percurso será o nome, **não a matrícula**.
-* O **número de nós percorridos no pior caso** será o mesmo número de níveis que seria percorrido em uma busca normal pela **matrícula**. Ou seja, **o número de nós percorridos não é afetado pelo comparador** utilizado para a busca — ele é afetado apenas pela estrutura da árvore, que depende da quantidade de nós inseridos.
-
-### 3. **Analisando o número de nós percorridos:**
-
-* Como a árvore foi criada com o método `geraArvorePerfeitamenteBalanceada` e está organizada pela **matrícula**, a estrutura será uma árvore **perfeitamente balanceada**. A altura de uma árvore balanceada é dada por **O(log n)**, onde `n` é o número de nós.
-* No pior caso, a busca percorrerá todos os níveis da árvore da **raiz até a folha mais profunda**. Portanto, o número de nós percorridos será **O(log n)**, onde `n` é o número total de alunos.
-
-### 4. **Ordem de complexidade da busca:**
-
-* A **ordem de complexidade** para a busca continua sendo **O(log n)**, mesmo quando usamos um `Comparator` diferente (como `compPorNome`). O motivo disso é que a estrutura da árvore (como ela está balanceada) e o número de comparações realizadas são ambos **logarítmicos** em relação ao número de nós.
-* Embora o comparador de nome possa alterar a ordem de comparação para determinar a posição do nó a ser visitado, o número de nós percorridos e a complexidade de tempo no pior caso não mudam.
-
-
-### Resposta final:
-
-| Questão                                    | Resposta                                                           |
-| ------------------------------------------ | ------------------------------------------------------------------ |
-| **Número de nós percorridos no pior caso** | **O(log n)**, onde `n` é o número de elementos na árvore (alunos). |
-| **Ordem de complexidade da busca**         | **O(log n)**.                                                      |
-
-**Explicação:**
-Mesmo que a árvore seja indexada por matrícula, a busca por nome será realizada pela árvore utilizando a comparação dos nomes, mas **a estrutura da árvore não muda**. Portanto, no pior caso, a busca percorre um número de nós proporcional à altura da árvore, que é **O(log n)** para uma árvore perfeitamente balanceada.
-
-# 8. Complexidade dos métodos geradores de árvore
-
-### Comparação das ordens de complexidade dos métodos
-
-Vamos analisar as ordens de complexidade de ambos os métodos e explicar qual tende a gerar mais rapidamente uma árvore de tamanho `n`.
+**Conclusão:** busca com complexidade **O(log n)**.
 
 ---
 
-### 1. **Método `geraArvorePerfeitamenteBalanceada`**
+### Qual a ordem de complexidade de buscas (`pesquisar(T valor)`) em árvores geradas por `geraArvorePerfeitamenteBalanceada`?
 
-**Descrição:**
-
-* Este método cria uma árvore binária **perfeitamente balanceada**. Ele faz isso dividindo recursivamente o intervalo de matrículas entre `min` e `max`, sempre inserindo o valor médio como o nó da árvore.
-* A cada recursão, ele chama `geraArvorePerfeitamenteBalanceada` para os intervalos menores e maiores que a média.
-
-**Análise da complexidade:**
-
-* **Divisão do intervalo:** Cada chamada recursiva divide o intervalo pela metade, o que implica que a árvore será balanceada.
-* **Altura da árvore:** Como a árvore é balanceada, a altura será aproximadamente **O(log n)**, já que a árvore irá se dividir em duas partes a cada nível.
-* **Número de chamadas:** O número de chamadas recursivas será proporcional à altura da árvore, ou seja, **O(log n)**.
-* **Custo da inserção:** Cada inserção de nó na árvore também tem custo **O(log n)**, porque a árvore está balanceada.
-
-**Complexidade total:**
-Para cada nó, há uma operação de inserção que leva **O(log n)**. Como há `n` nós, a complexidade total é:
-
-[
-\text{Complexidade de } \text{geraArvorePerfeitamenteBalanceada} = O(n \log n)
-]
+**O(log n)** — a altura cresce logaritmicamente em relação a `n`; a busca percorre no máximo a altura.
 
 ---
 
-### 2. **Método `geraArvoreDegenerada`**
+## 7. Ordem de complexidade da busca comparado por matricula
 
-**Descrição:**
+Cenário: a árvore está **indexada por matrícula** (comparador por matrícula), mas a busca é realizada passando um **`Comparator` por nome**.
 
-* Este método cria uma árvore **degenerada**, onde os nós são inseridos em ordem crescente de matrícula.
-* A árvore gerada não é balanceada e cada nó é inserido sempre à direita do anterior, criando uma estrutura semelhante a uma lista encadeada.
+- A estrutura física da árvore **permanece ordenada pela matrícula**.
+- O número de nós percorridos **depende da altura da árvore**, não do campo usado pelo `Comparator` passado à busca.
+- Em uma árvore perfeitamente balanceada, percorre-se **O(log n)** níveis.
 
-**Análise da complexidade:**
+> **Observação importante:** para que a busca binária seja **correta**, o **comparador usado para navegar** precisa ser **consistente** com o que ordenou a árvore. Caso contrário, a busca binária pode falhar e, para garantir correção, deve-se recorrer a **varredura linear (O(n))**. Se sua implementação garante consistência entre comparadores, mantém-se **O(log n)**.
 
-* **Inserção em árvore degenerada:** Como a árvore está degenerada, a inserção de cada nó exige percorrer a árvore até a posição correta, o que leva **O(n)** para o último nó inserido (a árvore é essencialmente uma lista).
-* **Número de inserções:** Existem `n` inserções a serem feitas.
+**Resumo:**
 
-**Complexidade total:**
-Cada inserção leva **O(n)**, e há `n` inserções. Portanto, a complexidade total é:
-
-[
-\text{Complexidade de } \text{geraArvoreDegenerada} = O(n^2)
-]
+| Questão | Resposta |
+| --- | --- |
+| Nº de nós percorridos (pior caso) | **O(log n)** (em árvore balanceada e comparadores consistentes) |
+| Ordem de complexidade da busca | **O(log n)** |
 
 ---
 
-### **Conclusão: Qual método gera a árvore mais rapidamente?**
+## 8. Complexidade dos métodos geradores de árvore
 
-* **`geraArvorePerfeitamenteBalanceada`:** O método tem complexidade **O(n log n)**, o que significa que ele cresce de forma mais eficiente conforme o número de elementos aumenta.
-* **`geraArvoreDegenerada`:** O método tem complexidade **O(n^2)**, o que significa que ele é menos eficiente à medida que o número de elementos cresce.
+### `geraArvorePerfeitamenteBalanceada`
+- Cria árvore balanceada por divisão recursiva do intervalo e inserção da mediana.
+- Cada inserção custa **O(log n)**; com `n` nós, custo total **O(n log n)**.
 
-**Portanto, o método `geraArvorePerfeitamenteBalanceada` tende a gerar árvores mais rapidamente, especialmente quando o número de elementos `n` é grande**, já que sua complexidade é mais baixa em comparação com a árvore degenerada, cuja complexidade é quadrática.
+### `geraArvoreDegenerada`
+- Insere chaves em ordem crescente, degenerando a BST.
+- A k-ésima inserção custa **O(k)** → somatório 1..n ⇒ **O(n²)**.
+
+**Conclusão:** gerar árvore balanceada é assintoticamente **mais eficiente** que gerar uma degenerada.
 
 ---
 
-### Resumo das Complexidades:
+## 9. Por que ocorre o Stack OverFlow
 
-| Método                              | Complexidade   |
-| ----------------------------------- | -------------- |
-| `geraArvorePerfeitamenteBalanceada` | **O(n log n)** |
-| `geraArvoreDegenerada`              | **O(n²)**      |
+Em árvores **degeneradas**, a inserção recursiva percorre uma cadeia longa de nós (altura ≈ `n`). Para `n` muito grandes (ex.: 50.000), a profundidade recursiva pode exceder o limite da pilha, resultando em **`StackOverflowError`**.
 
-Com base nisso, **o método `geraArvorePerfeitamenteBalanceada` é mais eficiente** e tende a gerar a árvore de forma mais rápida à medida que o número de elementos `n` aumenta.
+**Mitigações:**
+1. **Inserção iterativa** (substitui chamadas recursivas por laços).
+2. **Balanceamento** (usar AVL/Red-Black) para limitar a altura a `O(log n)`.
+3. **Tail recursion** e/ou **ajuste de stack** (quando possível) — ainda assim não resolve a degeneração estrutural.
 
-# 9. Por que ocorre o Stack OverFlow
+---
 
-Quando a árvore é **degenerada** (em que todos os nós são inseridos de forma linear, cada novo nó é inserido à direita do nó anterior), a árvore acaba se tornando uma **lista encadeada**. A inserção, portanto, fica limitada a uma linha reta de nós, e cada nova inserção exige a busca pela posição correta, que leva até o final da árvore.
+## Etapa 5: Relatório de Análise (BinTree vs. BinTreeAVL)
 
-**Especificamente, o erro ocorre porque:**
+### 1. Dados de Saída do `AppRelatorioAVL`
 
-* O método `adicionarRecursivo` provavelmente não está lidando corretamente com árvores de grande altura, como no caso de 50.000 elementos, gerando um **loop infinito** ou **excesso de chamadas recursivas**.
-* Em árvores degeneradas, o método recursivo acaba se chamando indefinidamente, pois sempre tenta inserir o próximo nó à direita do anterior, causando um **estouro da pilha de chamadas recursivas** (o famoso `StackOverflowError`).
-
-### **Momento do erro:**
-
-O erro ocorre durante a execução do segundo bloco de código:
-
-```java
-arv = new BinTree<>(compPorMatricula);
-gerador.geraArvoreDegenerada(50000, arv);
+```
+Árvore AVL Criada
+Quantidade de Nós: 100 Altura: 6
+Árvore Degenerada Criada
+Quantidade de Nós: 100 Altura: 99
+Árvore AVL Criada
+Quantidade de Nós: 1000 Altura: 9
+Árvore Degenerada Criada
+Quantidade de Nós: 1000 Altura: 999
+Árvore AVL Criada
+Quantidade de Nós: 10000 Altura: 13
+Árvore Degenerada Criada
+Quantidade de Nós: 10000 Altura: 9999
 ```
 
-* **`geraArvoreDegenerada`** tenta inserir 50.000 elementos de maneira recursiva, mas como a árvore degenerada é essencialmente uma lista encadeada, a recursão não encontra a condição de parada de maneira eficiente, pois o método de inserção recursivo percorre a árvore até o final a cada vez que um novo nó é adicionado.
+### 2. Método de Geração Utilizado
 
-### **Solução:**
+Ambas as árvores receberam entradas via `geraArvoreDegenerada` (matrículas estritamente crescentes, como 101, 102, 103, ...):
 
-Para evitar esse erro, existem duas abordagens possíveis:
+```java
+public void geraArvoreDegenerada(int n, BinTreeInterface<Aluno> arv){
+    int i, matricula = matriculaBase;
+    String nome;
+    for (i = 1; i <= n; i++){
+        matricula++;
+        nome = geraNomeCompleto();
+        // Cria o aluno e adiciona na árvore
+        arv.adicionar(new Aluno(matricula, nome));
+    }
+}
+```
 
-1. **Transformar a inserção recursiva em iterativa:** Isso evitaria o risco de estouro de pilha, pois a inserção seria feita sem recorrer à recursão. A ideia é inserir os elementos de forma iterativa, percorrendo a árvore até o ponto correto sem usar chamadas recursivas.
+### 3. Análise: Comparação das Alturas das Árvores
 
-2. **Limitar a profundidade da recursão:** Se você deseja manter a recursão, uma abordagem seria ajustar o limite máximo de recursões ou alterar a implementação para impedir que a profundidade da árvore cresça demais sem controle. Em alguns casos, pode-se aplicar **recursão otimizada** (por exemplo, utilizando a técnica de **tail recursion**), mas no caso de árvores degeneradas, a recursão não é a abordagem ideal devido à falta de balanceamento.
+- **`BinTree` (BST padrão, sem balanceamento):** com dados ordenados, degenere e sua altura é **O(n)** (ex.: 9999 para `n=10000`).
+- **`BinTreeAVL` (BST auto-balanceada):** aplica rotações a cada inserção para manter altura **O(log n)** (ex.: 13 para `n=10000`).
 
-### **Conclusão:**
+| Tipo de Árvore | Entrada | N=100 | N=1000 | N=10000 | Complexidade da altura |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `BinTree` (BST) | Ordenada | 99 | 999 | 9999 | **O(n)** |
+| `BinTreeAVL` | Ordenada | 6 | 9 | 13 | **O(log n)** |
 
-O **`StackOverflowError`** ocorre devido à **profunda recursão** criada pela estrutura da árvore degenerada, onde a recursão não encontra um ponto de interrupção eficiente, resultando em um número excessivo de chamadas. A solução seria usar uma abordagem **iterativa** ou otimizar o código recursivo para evitar esse erro.
+**Conclusão:** a diferença decorre do **balanceamento** da AVL, não do método de geração.
 
-# 10, 11 e 12. Contact Manager:
+---
 
-### 1. **Requisitos Funcionais e Funcionamento do Aplicativo**
+## 4. Análise: Ordem de Complexidade da Busca na AVL
 
-O aplicativo desenvolvido permite o gerenciamento de contatos, com as seguintes funcionalidades principais:
+Em qualquer BST, a busca custa **O(altura)**. Como a AVL mantém altura **O(log n)**, a busca permanece **O(log n)**, mesmo com entrada degenerada.
 
-* **Adicionar Contato**: O usuário pode adicionar um novo contato, informando o nome, telefone e e-mail.
-* **Listar Contatos**: O aplicativo exibe os contatos armazenados na árvore em ordem crescente de nome (utilizando a travessia em ordem da árvore).
-* **Pesquisar por Nome**: O usuário pode pesquisar um contato pelo nome, e o aplicativo retorna o contato correspondente, se encontrado.
-* **Pesquisar por Telefone**: O aplicativo também permite buscar um contato através do número de telefone, utilizando um comparador específico para isso.
-* **Remover Contato**: O usuário pode remover um contato, informando o nome do contato a ser removido.
+---
 
-### 2. **Arquitetura das Classes e Organização**
+## Etapa 6: Implementações Baseadas em Árvores Binárias na Biblioteca Padrão de Java
 
-O aplicativo segue uma arquitetura baseada em uma **árvore binária de busca (BST)**, onde os contatos são armazenados e manipulados de acordo com o critério de comparação definido por **Comparadores** (por nome ou telefone).
+### 1. `TreeMap` e `TreeSet` — Árvores Rubro-Negras
 
-* **Classe `Contact`**: Representa um contato com atributos de nome, telefone e e-mail. Ela possui métodos para acessar essas informações, um método `equals()` para comparar contatos por nome e um método `toString()` para exibir os dados do contato.
-* **Classe `ContactNameComparator`**: Implementa a interface `Comparator<Contact>` e é usada para comparar contatos pelo nome, o que é útil para organizar os contatos na árvore e realizar buscas.
-* **Classe `ContactPhoneComparator`**: Implementa a interface `Comparator<Contact>` e é usada para comparar contatos pelo telefone, permitindo a pesquisa dos contatos pelo número de telefone.
-* **Classe `Main`**: Contém a lógica de interação com o usuário por meio de um menu. A classe gerencia as opções de adicionar, listar, pesquisar e remover contatos, utilizando a árvore binária (`BinTree<Contact>`), que é inicialmente organizada por nome e permite a pesquisa e remoção de contatos.
+- **Estrutura:** Red-Black Tree (autobalanceada)
+- **Operações principais:** inserção, busca e remoção em **O(log n)**
+- **Ordenação:** ordem natural da chave ou `Comparator` customizado
 
-### 3. **Planilha de Desenvolvimento**
+#### `TreeMap<K,V>`
+- Pares (chave, valor); chaves em ordem.
+- `put`, `get`, `remove`, `containsKey` → **O(log n)**.
 
-Aqui está um exemplo de como a planilha poderia ser organizada:
+#### `TreeSet<E>`
+- Conjunto ordenado; internamente usa `TreeMap<E,Object>`.
+- `add`, `contains`, `remove` → **O(log n)**.
 
-| **Componente**                      | **Responsável**  |                                                                                                                                           |
-| ----------------------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Desenvolvimento da Biblioteca            | Heitor Oliveira 
-| esenvolvimento do Aplicativo de Contatos           | Caio Coronel
-| Relatório e Perguntas          | Caio e Heitor
-### Link para o repositório: https://github.com/heitoliv/BinTree 
+### 2. `PriorityQueue<E>` — Heap Binário (Min-Heap)
+
+- **Estrutura:** heap binário completo (geralmente implementado como array).
+- `offer/add` e remoção da raiz (`poll/remove`) → **O(log n)**.
+- Busca arbitrária/remoção de elemento específico → **O(n)**.
+- `peek` → **O(1)** para obter o mínimo.
+
+---
+
+## 5. Comparativo entre as bibliotecas (Padrão Java vs AVL)
+
+### 1) Estrutura e balanceamento
+- **Sua `BinTreeAVL`:** AVL (balanceamento estrito). Busca levemente mais rápida; inserções/remoções exigem mais rotações.
+- **`TreeMap`/`TreeSet`:** Red-Black (balanceamento relaxado). Menos rotações em média; API rica.
+
+### 2) Cobertura de métodos
+- **`BinTreeAVL`:** foco em inserir/buscar/remover e balancear.
+- **Java Collections:** além do básico, fornece navegação (`first/last/lower/higher/floor/ceiling`), *views* (`subSet/headSet/tailSet`), iteradores ordenados e integração com `SortedMap/SortedSet/Navigable*`.
+
+### 3) Busca por atributo não-chave
+- Em estruturas ordenadas por um atributo, buscar eficientemente por **outro** atributo exige **outro índice**. Caso contrário, a busca é linear **O(n)**.
+
+---
+
+## Exemplo Prático de Utilização (TreeMap)
+
+### 1. Classe `Produto`
+
+```java
+// Produto.java
+public class Produto implements Comparable<Produto> {
+    private int id;
+    private String nome;
+    private double preco;
+
+    public Produto(int id, String nome, double preco) {
+        this.id = id;
+        this.nome = nome;
+        this.preco = preco;
+    }
+
+    public int getId() { return id; }
+    public String getNome() { return nome; }
+    public double getPreco() { return preco; }
+
+    // Ordem natural por ID
+    @Override
+    public int compareTo(Produto outro) {
+        return Integer.compare(this.id, outro.id);
+    }
+
+    @Override
+    public String toString() {
+        return "Produto{" + "id=" + id + ", nome='" + nome + '\'' + ", preco=" + preco + '}';
+    }
+}
+```
+
+### 2. Classe Principal com Exemplos
+
+```java
+// Main.java
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
+
+public class Main {
+    public static void main(String[] args) {
+        // TreeMap ordenado por ID (chave Integer)
+        Map<Integer, Produto> produtosPorId = new TreeMap<>();
+        produtosPorId.put(102, new Produto(102, "Mouse Gamer", 150.00));
+        produtosPorId.put(35,  new Produto(35,  "Teclado Mecânico", 350.50));
+        produtosPorId.put(1,   new Produto(1,   "Monitor 4K", 2200.00));
+
+        System.out.println("--- Produtos ordenados por ID (chave natural) ---");
+        for (Map.Entry<Integer, Produto> entry : produtosPorId.entrySet()) {
+            System.out.println("Chave: " + entry.getKey() + ", Valor: " + entry.getValue());
+        }
+        System.out.println();
+
+        // TreeMap alternativo ordenado por Nome (chave String)
+        Map<String, Produto> produtosPorNome = new TreeMap<>();
+        produtosPorNome.put("Mouse Gamer",      new Produto(102, "Mouse Gamer", 150.00));
+        produtosPorNome.put("Teclado Mecânico", new Produto(35,  "Teclado Mecânico", 350.50));
+        produtosPorNome.put("Monitor 4K",       new Produto(1,   "Monitor 4K", 2200.00));
+
+        System.out.println("--- Produtos ordenados por Nome (chave natural da String) ---");
+        produtosPorNome.forEach((chave, valor) -> System.out.println("Chave: " + chave + ", Valor: " + valor));
+        System.out.println();
+
+        // Busca por atributo não-chave (preço) -> varredura O(n)
+        System.out.println("--- Buscando produto com preço 150.00 (Busca Linear O(n)) ---");
+        double precoBuscado = 150.00;
+        Optional<Produto> produtoEncontrado = produtosPorId.values().stream()
+                .filter(produto -> produto.getPreco() == precoBuscado)
+                .findFirst();
+
+        if (produtoEncontrado.isPresent()) {
+            System.out.println("Produto encontrado: " + produtoEncontrado.get());
+        } else {
+            System.out.println("Nenhum produto encontrado com o preço " + precoBuscado);
+        }
+    }
+}
+```
+
+### 3. Saída Esperada
+
+```
+--- Produtos ordenados por ID (chave natural) ---
+Chave: 1, Valor: Produto{id=1, nome='Monitor 4K', preco=2200.0}
+Chave: 35, Valor: Produto{id=35, nome='Teclado Mecânico', preco=350.5}
+Chave: 102, Valor: Produto{id=102, nome='Mouse Gamer', preco=150.0}
+
+--- Produtos ordenados por Nome (chave natural da String) ---
+Chave: Monitor 4K, Valor: Produto{id=1, nome='Monitor 4K', preco=2200.0}
+Chave: Mouse Gamer, Valor: Produto{id=102, nome='Mouse Gamer', preco=150.0}
+Chave: Teclado Mecânico, Valor: Produto{id=35, nome='Teclado Mecânico', preco=350.5}
+
+--- Buscando produto com preço 150.00 (Busca Linear O(n)) ---
+Produto encontrado: Produto{id=102, nome='Mouse Gamer', preco=150.0}
+```
+
+---
+
+## Planilha de Desenvolvimento
+
+| Componente | Responsável |
+| --- | --- |
+| Desenvolvimento da biblioteca (árvores) | Heitor Oliveira |
+| Desenvolvimento do aplicativo de contatos | Caio Coronel |
+| Relatório e perguntas | Caio Coronel e Heitor Oliveira |
+
+---
+
+## Observações Finais
+- **BST degenerada vs balanceada:** `O(n)` vs `O(log n)` em altura e buscas.
+- **AVL** evita degeneração via rotações, mantendo garantias assintóticas.
+- **TreeMap/TreeSet** (Red-Black) oferecem API rica com custo logarítmico.
+- **Múltiplos índices** podem ser necessários para buscas eficientes por atributos distintos.
+
+> Para dúvidas ou melhorias, abra uma *issue* no repositório.
